@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import java.time.LocalDateTime;
+
 
 import java.math.BigDecimal;
 
@@ -39,4 +41,13 @@ public class ProductEntity {
     @Length(max = 500)
     @Column(name = "description")
     private String description;
+
+//    @NotNull
+//    @Column(name = "created_at", updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createdAt = LocalDateTime.now();
+//    }
 }

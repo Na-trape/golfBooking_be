@@ -39,7 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/players", "/tokens", "/trainers", "/products").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/products/**", "/players/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/products/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products", "/players/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**", "/players/**").permitAll()
                         .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()
                         .requestMatchers("/ws/**").permitAll() // Allow unauthenticated access to the WebSocket endpoint
                         .anyRequest().authenticated()

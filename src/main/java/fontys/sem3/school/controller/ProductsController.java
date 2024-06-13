@@ -1,9 +1,6 @@
 package fontys.sem3.school.controller;
 
-import fontys.sem3.school.business.CreateProductUseCase;
-import fontys.sem3.school.business.DeleteProductUseCase;
-import fontys.sem3.school.business.GetAllProductsUseCase;
-import fontys.sem3.school.business.UpdateProductUseCase;
+import fontys.sem3.school.business.*;
 import fontys.sem3.school.domain.Product;
 import fontys.sem3.school.domain.ProductRequestResponse.CreateProductRequest;
 import fontys.sem3.school.domain.ProductRequestResponse.CreateProductResponse;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -24,6 +22,7 @@ public class ProductsController {
     private final UpdateProductUseCase updateProductUseCase;
     private final DeleteProductUseCase deleteProductUseCase;
     private final GetAllProductsUseCase getAllProductsUseCase;
+    private final GetProductByIdUseCase getProductByIdUseCase;
 
     @PostMapping()
     public ResponseEntity<CreateProductResponse> createProduct(@RequestBody @Valid CreateProductRequest request) {
@@ -46,5 +45,11 @@ public class ProductsController {
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = getAllProductsUseCase.getAllProducts();
         return ResponseEntity.ok(products);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Optional<Product> productOptional = getProductByIdUseCase.getProductById(id);
+        return productOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
