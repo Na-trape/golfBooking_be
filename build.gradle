@@ -1,0 +1,87 @@
+plugins {
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'jacoco'
+	id 'java'
+	id "org.sonarqube" version "4.4.1.3373"
+}
+
+group = 'fontys.sem3'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'org.flywaydb:flyway-core'
+
+//	implementation 'com.h2database:h2'
+	implementation 'org.postgresql:postgresql:42.6.0'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"**/configuration/*"
+			])
+		}))
+	}
+}
+
+
+sonar {
+	properties {
+		property "sonar.projectKey", "Golf2"
+		property "sonar.projectName", "Golf2"
+		property "sonar.scm.disabled ", "True"
+
+		property "sonar.qualitygate.wait", true
+		property "sonar.coverage.exclusions", "src/main/java/s3/fontys/configuration/**," +
+				" src/main/java/fontys/sem3/school/domain/**," +
+				" src/main/java/fontys/sem3/school/repository/**,"
+
+		property "sonar.tests", "src/test/java/fontys/sem3/school/controller"
+		property "sonar.tests", "src/test/java/fontys/sem3/school/unit"
+
+		property"sonar.host.url", "http://localhost:9000"
+		property "sonar.token", "sqp_0a79363386f438eb722775c994d914af675742bf"
+
+
+	}
+
+}
