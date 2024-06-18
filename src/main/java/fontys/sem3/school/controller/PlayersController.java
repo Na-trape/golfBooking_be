@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +21,7 @@ public class PlayersController {
     private final DeletePlayerUseCase deletePlayerUseCase;
     private final CreatePlayerUseCase createPlayerUseCase;
     private final UpdatePlayerUseCase updatePlayerUseCase;
+    private final SearchPlayersUseCase searchPlayersUseCase;
 
     @GetMapping("{id}")
 //    @RolesAllowed({"PLAYER", "ADMIN"})
@@ -32,7 +34,7 @@ public class PlayersController {
     }
 
     @GetMapping
-    @RolesAllowed({"PLAYER", "ADMIN"})
+//    @RolesAllowed({"PLAYER", "ADMIN"})
     public ResponseEntity<GetAllPlayersResponse> getAllPlayers(@RequestParam(value = "country", required = false) String countryCode) {
         GetAllPlayersRequest request = new GetAllPlayersRequest();
         request.setCountryCode(countryCode);
@@ -40,7 +42,7 @@ public class PlayersController {
     }
 
     @DeleteMapping("{playerId}")
-    @RolesAllowed({"ADMIN"})
+//    @RolesAllowed({"ADMIN"})
     public ResponseEntity<Void> deletePlayer(@PathVariable int playerId) {
         deletePlayerUseCase.deletePlayer(playerId);
         return ResponseEntity.noContent().build();
@@ -54,9 +56,17 @@ public class PlayersController {
     }
 
     @PutMapping("{id}")
+    @RolesAllowed({"PLAYER", "ADMIN"})
     public ResponseEntity<Player> updatePlayer(@PathVariable("id") long id, @RequestBody @Valid UpdatePlayerRequest request) {
         request.setId(id);
         updatePlayerUseCase.updatePlayer(request);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<Player>> searchPlayers(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "license", required = false) Long license) {
+        List<Player> players = searchPlayersUseCase.searchPlayers(name, license);
+        return ResponseEntity.ok(players);
     }
 }

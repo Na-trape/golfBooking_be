@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,4 +18,6 @@ public class Product {
     private BigDecimal price;
     private String category;
     private String description;
+    private LocalDateTime createdAt;
+    private Long userId;
 }

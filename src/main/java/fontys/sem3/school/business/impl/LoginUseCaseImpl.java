@@ -42,12 +42,13 @@ public class LoginUseCaseImpl implements LoginUseCase {
 
     private String generateAccessToken(UserEntity user) {
         Long playerId = user.getPlayer() != null ? user.getPlayer().getId() : null;
+        Long userId = user.getId();
         List<String> roles = user.getUserRoles().stream()
                 .map(userRole -> userRole.getRole().toString())
                 .toList();
 
         return accessTokenEncoder.encode(
-                new AccessTokenImpl(user.getUsername(), playerId, roles));
+                new AccessTokenImpl(user.getUsername(), playerId, userId, roles));
     }
 
 }

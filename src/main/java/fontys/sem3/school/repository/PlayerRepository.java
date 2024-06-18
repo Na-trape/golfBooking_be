@@ -11,4 +11,7 @@ public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
     boolean existsByLicense(long license);
 
     List<PlayerEntity> findAllByCountry_CodeOrderByNameAsc(String countryCode);
+    List<PlayerEntity> findByNameContainingIgnoreCase(String name);
+
+    List<PlayerEntity> findByLicenseContaining(Long license);
 }

@@ -6,6 +6,7 @@ public interface AccessToken {
     String getSubject();
 
     Long getPlayerId();
+    Long getUserId();
 
     Set<String> getRoles();
 
