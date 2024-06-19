@@ -40,68 +40,65 @@ class LoginUseCaseImplTest {
     @InjectMocks
     private LoginUseCaseImpl loginUseCaseImpl;
 
-//    @Test
-//    void testLogin_Success() {
-//        String username = "testuser";
-//        String password = "password";
-//        String encodedPassword = "encodedPassword";
-//
-//        UserEntity userEntity = UserEntity.builder()
-//                .username(username)
-//                .password(encodedPassword)
-//                .player(PlayerEntity.builder().id(1L).build())
-//                .userRoles((Set<UserRoleEntity>) List.of(UserRoleEntity.builder().role(RoleEnum.PLAYER).build()))
-//                .build();
-//
-//        when(userRepository.findByUsername(username)).thenReturn(userEntity);
-//        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(true);
-//        when(accessTokenEncoder.encode(any(AccessTokenImpl.class))).thenReturn("dummyToken");
-//
-//        LoginRequest loginRequest = LoginRequest.builder()
-//                .username(username)
-//                .password(password)
-//                .build();
-//
-//        LoginResponse loginResponse = loginUseCaseImpl.login(loginRequest);
-//
-//        assertNotNull(loginResponse);
-//        assertEquals("dummyToken", loginResponse.getAccessToken());
-//
-//        verify(userRepository, times(1)).findByUsername(username);
-//        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
-//        verify(accessTokenEncoder, times(1)).encode(any(AccessTokenImpl.class));
-//    }
-//
-//    @Test
-//    void testLogin_AsAdmin_Success() {
-//        String username = "adminuser";
-//        String password = "password";
-//        String encodedPassword = "encodedPassword";
-//
-//        UserEntity userEntity = UserEntity.builder()
-//                .username(username)
-//                .password(encodedPassword)
-//                .userRoles((Set<UserRoleEntity>) List.of(UserRoleEntity.builder().role(RoleEnum.ADMIN).build()))
-//                .build();
-//
-//        when(userRepository.findByUsername(username)).thenReturn(userEntity);
-//        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(true);
-//        when(accessTokenEncoder.encode(any(AccessTokenImpl.class))).thenReturn("adminToken");
-//
-//        LoginRequest loginRequest = LoginRequest.builder()
-//                .username(username)
-//                .password(password)
-//                .build();
-//
-//        LoginResponse loginResponse = loginUseCaseImpl.login(loginRequest);
-//
-//        assertNotNull(loginResponse);
-//        assertEquals("adminToken", loginResponse.getAccessToken());
-//
-//        verify(userRepository, times(1)).findByUsername(username);
-//        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
-//        verify(accessTokenEncoder, times(1)).encode(any(AccessTokenImpl.class));
-//    }
+    @Test
+    void testLogin_InvalidPassword() {
+        String username = "testuser";
+        String password = "invalidpassword";
+        String encodedPassword = "encodedPassword";
+
+        UserEntity userEntity = UserEntity.builder()
+                .username(username)
+                .password(encodedPassword)
+                .player(PlayerEntity.builder().id(1L).build())
+                .userRoles(Set.of(UserRoleEntity.builder().role(RoleEnum.PLAYER).build()))
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(userEntity);
+        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(false);
+
+        LoginRequest loginRequest = LoginRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        assertThrows(InvalidCredentialsException.class, () -> loginUseCaseImpl.login(loginRequest));
+
+        verify(userRepository, times(1)).findByUsername(username);
+        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
+        verify(accessTokenEncoder, never()).encode(any(AccessTokenImpl.class));
+    }
+
+    @Test
+    void testLogin_ValidCredentials() {
+        String username = "testuser";
+        String password = "validpassword";
+        String encodedPassword = "encodedPassword";
+        String accessToken = "accessToken";
+
+        UserEntity userEntity = UserEntity.builder()
+                .username(username)
+                .password(encodedPassword)
+                .player(PlayerEntity.builder().id(1L).build())
+                .userRoles(Set.of(UserRoleEntity.builder().role(RoleEnum.PLAYER).build()))
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(userEntity);
+        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(true);
+        when(accessTokenEncoder.encode(any(AccessTokenImpl.class))).thenReturn(accessToken);
+
+        LoginRequest loginRequest = LoginRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        LoginResponse loginResponse = loginUseCaseImpl.login(loginRequest);
+
+        assertEquals(accessToken, loginResponse.getAccessToken());
+
+        verify(userRepository, times(1)).findByUsername(username);
+        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
+        verify(accessTokenEncoder, times(1)).encode(any(AccessTokenImpl.class));
+    }
 
     @Test
     void testLogin_InvalidUsername() {

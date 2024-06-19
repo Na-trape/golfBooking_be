@@ -31,6 +31,8 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'org.flywaydb:flyway-core'
 
+	testImplementation 'org.springframework:spring-messaging'
+
 //	implementation 'com.h2database:h2'
 	implementation 'org.postgresql:postgresql:42.6.0'
 
@@ -79,11 +81,12 @@ sonar {
 				" src/main/java/fontys/sem3/school/domain/**," +
 				" src/main/java/fontys/sem3/school/repository/**,"
 
-		property "sonar.tests", "src/test/java/fontys/sem3/school/controller"
-		property "sonar.tests", "src/test/java/fontys/sem3/school/unit"
+		property "sonar.tests", "src/test/java/fontys/sem3/school/controller, src/test/java/fontys/sem3/school/unit"
+
+		property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
 
 		property"sonar.host.url", "http://localhost:9000"
-		property "sonar.token", "sqp_0a79363386f438eb722775c994d914af675742bf"
+		property "sonar.token", "sqp_b3709931f170583147f89bb41c1ca932f4ebb329"
 
 
 	}

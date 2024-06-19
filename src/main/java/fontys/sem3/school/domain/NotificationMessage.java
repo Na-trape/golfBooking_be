@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationMessage {
     private String from;
+    private String to;
     private String content;
     private String room;
 }

@@ -18,14 +18,7 @@ public class SearchPlayersUseCaseImpl implements SearchPlayersUseCase {
 
     @Override
     public List<Player> searchPlayers(String name, Long license) {
-        List<PlayerEntity> playerEntities;
-        if (name != null && !name.isEmpty()) {
-            playerEntities = playerRepository.findByNameContainingIgnoreCase(name);
-        } else if (license != null) {
-            playerEntities = playerRepository.findByLicenseContaining(license);
-        } else {
-            playerEntities = playerRepository.findAll();
-        }
+        List<PlayerEntity> playerEntities = playerRepository.findByNameContainingIgnoreCaseAndLicense(name, license);
         return playerEntities.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
