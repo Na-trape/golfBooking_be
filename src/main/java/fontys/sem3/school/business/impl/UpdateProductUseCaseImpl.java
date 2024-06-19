@@ -2,6 +2,7 @@ package fontys.sem3.school.business.impl;
 
 import fontys.sem3.school.business.UpdateProductUseCase;
 import fontys.sem3.school.business.exception.InvalidProductException;
+import fontys.sem3.school.configuration.security.token.AccessToken;
 import fontys.sem3.school.domain.ProductRequestResponse.UpdateProductRequest;
 import fontys.sem3.school.repository.ProductRepository;
 import fontys.sem3.school.repository.entity.ProductEntity;
@@ -18,11 +19,15 @@ import java.util.Optional;
 public class UpdateProductUseCaseImpl implements UpdateProductUseCase {
     private final ProductRepository productRepository;
     private static final Logger logger = LoggerFactory.getLogger(UpdateProductUseCaseImpl.class);
+//    private AccessToken requestAccessToken;
+
 
     @Transactional
     @Override
     public void updateProduct(UpdateProductRequest request) {
         logger.debug("Received request to update product: {}", request);
+
+
 
         Optional<ProductEntity> productOptional = productRepository.findById(request.getId());
         if (productOptional.isEmpty()) {

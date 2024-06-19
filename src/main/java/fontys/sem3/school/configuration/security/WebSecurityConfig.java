@@ -41,7 +41,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**", "/players/**", "/tokens/**").permitAll()
                         .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()
-                        .requestMatchers("/ws/**").permitAll() // Allow unauthenticated access to the WebSocket endpoint
+                        .requestMatchers("/gs-guide-websocket/**").permitAll() // Allow unauthenticated access to the WebSocket endpoint
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
