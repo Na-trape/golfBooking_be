@@ -1,12 +1,16 @@
 package fontys.sem3.school.controller;
 
 import fontys.sem3.school.business.*;
+import fontys.sem3.school.configuration.security.token.AccessToken;
+import fontys.sem3.school.configuration.security.token.AccessTokenDecoder;
 import fontys.sem3.school.domain.*;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +18,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/players")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@AllArgsConstructor
 public class PlayersController {
     private final GetPlayerUseCase getPlayerUseCase;
     private final GetPlayersUseCase getPlayersUseCase;
@@ -22,6 +27,9 @@ public class PlayersController {
     private final CreatePlayerUseCase createPlayerUseCase;
     private final UpdatePlayerUseCase updatePlayerUseCase;
     private final SearchPlayersUseCase searchPlayersUseCase;
+
+    private final AccessTokenDecoder accessTokenDecoder;
+    private AccessToken requestAccessToken;
 
     @GetMapping("{id}")
 //    @RolesAllowed({"PLAYER", "ADMIN"})
@@ -34,7 +42,7 @@ public class PlayersController {
     }
 
     @GetMapping
-//    @RolesAllowed({"PLAYER", "ADMIN"})
+    @PreAuthorize("hasAnyRole('PLAYER', 'ADMIN')")
     public ResponseEntity<GetAllPlayersResponse> getAllPlayers(@RequestParam(value = "country", required = false) String countryCode) {
         GetAllPlayersRequest request = new GetAllPlayersRequest();
         request.setCountryCode(countryCode);
@@ -56,8 +64,20 @@ public class PlayersController {
     }
 
     @PutMapping("{id}")
-    @RolesAllowed({"PLAYER", "ADMIN"})
+//    @RolesAllowed({"PLAYER", "ADMIN"})
     public ResponseEntity<Player> updatePlayer(@PathVariable("id") long id, @RequestBody @Valid UpdatePlayerRequest request) {
+//        System.out.println(requestAccessToken.getRoles());
+//        System.out.println("oisdhgfhghjjhsjghjfkjzfghv;ejkhg;jlkfhdgj;fhdxkjbbdljkdgdfjkbbkjdgjkgjsjacljADsb");
+
+//        String authToken = httpRequest.getHeader("Authorization");
+//        if (authToken != null && authToken.startsWith("Bearer ")) {
+//            String token = authToken.substring(7); // Remove "Bearer " prefix
+//            AccessToken accessToken = accessTokenDecoder.decode(token);
+//
+//            // Ensure roles are decoded correctly
+//            System.out.println("Roles in decoded token: " + accessToken.getRoles());
+//        }
+
         request.setId(id);
         updatePlayerUseCase.updatePlayer(request);
         return ResponseEntity.noContent().build();

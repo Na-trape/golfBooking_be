@@ -4,6 +4,7 @@ import fontys.sem3.school.configuration.security.auth.AuthenticationRequestFilte
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,8 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+//@EnableWebSecurity
+//@EnableMethodSecurity(jsr250Enabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity
 @Configuration
 public class WebSecurityConfig {
 

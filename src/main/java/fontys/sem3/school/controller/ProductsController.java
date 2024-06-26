@@ -4,6 +4,7 @@ import fontys.sem3.school.business.*;
 import fontys.sem3.school.domain.Product;
 import fontys.sem3.school.domain.ProductRequestResponse.CreateProductRequest;
 import fontys.sem3.school.domain.ProductRequestResponse.CreateProductResponse;
+import fontys.sem3.school.domain.ProductRequestResponse.RoleProductDTO;
 import fontys.sem3.school.domain.ProductRequestResponse.UpdateProductRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,7 @@ public class ProductsController {
     private final GetProductByIdUseCase getProductByIdUseCase;
     private final SearchProductsUseCase searchProductsUseCase;
     private final GetProductsByMonthUseCase getProductsByMonthUseCase;
+    private final CountProductsByRoleUseCase countProductsByRoleUseCase;
 
     @PostMapping()
     public ResponseEntity<CreateProductResponse> createProduct(@RequestBody @Valid CreateProductRequest request, HttpServletRequest httpRequest) {
@@ -69,5 +72,10 @@ public class ProductsController {
             @RequestParam(value = "monthsAgo", defaultValue = "0") int monthsAgo) {
         List<Product> products = getProductsByMonthUseCase.getProductsByMonth(monthsAgo);
         return ResponseEntity.ok(products);
+    }
+    @GetMapping("/countByRole")
+    public ResponseEntity<List<RoleProductDTO>> countProductsByRole() {
+        List<RoleProductDTO> counts = countProductsByRoleUseCase.countProductsByRole();
+        return ResponseEntity.ok(counts);
     }
 }

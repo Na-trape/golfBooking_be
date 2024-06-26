@@ -23,4 +23,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     @Query("SELECT p FROM ProductEntity p WHERE p.createdAt BETWEEN :startDate AND :endDate")
     List<ProductEntity> findAllByCreatedAtBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT ur.role, COUNT(p) FROM ProductEntity p JOIN p.user u JOIN u.userRoles ur GROUP BY ur.role")
+    List<Object[]> countProductsByRole();
+
 }

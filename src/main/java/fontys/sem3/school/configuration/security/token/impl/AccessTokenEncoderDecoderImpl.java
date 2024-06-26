@@ -40,6 +40,9 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
         if (accessToken.getPlayerId() != null) {
             claimsMap.put("playerId", accessToken.getPlayerId());
         }
+        if (accessToken.getUserId() != null) {
+            claimsMap.put("userId", accessToken.getUserId());
+        }
 
         Instant now = Instant.now();
         return Jwts.builder()
@@ -50,6 +53,7 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
                 .signWith(key)
                 .compact();
     }
+
 
     @Override
     public AccessToken decode(String accessTokenEncoded) {
@@ -67,4 +71,5 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
             throw new InvalidAccessTokenException(e.getMessage());
         }
     }
+
 }

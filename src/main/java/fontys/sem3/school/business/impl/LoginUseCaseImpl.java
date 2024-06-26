@@ -2,6 +2,8 @@ package fontys.sem3.school.business.impl;
 
 import fontys.sem3.school.business.LoginUseCase;
 import fontys.sem3.school.business.exception.InvalidCredentialsException;
+import fontys.sem3.school.configuration.security.token.AccessToken;
+import fontys.sem3.school.configuration.security.token.AccessTokenDecoder;
 import fontys.sem3.school.configuration.security.token.AccessTokenEncoder;
 import fontys.sem3.school.configuration.security.token.impl.AccessTokenImpl;
 import fontys.sem3.school.domain.LoginRequest;
@@ -20,6 +22,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenEncoder accessTokenEncoder;
+    private final AccessTokenDecoder accessTokenDecoder;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -33,6 +36,11 @@ public class LoginUseCaseImpl implements LoginUseCase {
         }
 
         String accessToken = generateAccessToken(user);
+
+        // Debugging: Decode the token to verify roles
+        AccessToken decodedToken = accessTokenDecoder.decode(accessToken);
+        System.out.println("Roles in generated token: " + decodedToken.getRoles());
+
         return LoginResponse.builder().accessToken(accessToken).build();
     }
 
@@ -50,5 +58,6 @@ public class LoginUseCaseImpl implements LoginUseCase {
         return accessTokenEncoder.encode(
                 new AccessTokenImpl(user.getUsername(), playerId, userId, roles));
     }
+
 
 }
